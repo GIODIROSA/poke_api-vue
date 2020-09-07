@@ -4,7 +4,7 @@
     <Reloj />
     <Navbar />
     <Herosection />
-<!-- input -->
+    <!-- input -->
     <div class="container">
       <div class="inputPoke form-group mx-sm-3 mb-2">
         <input
@@ -19,7 +19,10 @@
 
       <!-- ===========Manejo de error 1====== -->
       <section v-if="errored">
-        <p>Lo sentimos, la comunicación se perdido....</p>
+        <p>
+          <img :src="errorimagen" class="card-img-top" alt="imagen" />Lo
+          sentimos, el pokemon no existe....
+        </p>
       </section>
       <!-- ==========Manejo de error 2=============== -->
       <section v-if="loading">
@@ -79,6 +82,11 @@ export default {
       },
       errored: false,
       loading: true,
+      errorPokemon: {
+        sprites: {
+          front_default: "",
+        },
+      },
     };
   },
   created() {
@@ -95,6 +103,7 @@ export default {
           })
           .catch((err) => {
             console.log(`todo esta perdido: ${err}`);
+            this.error;
             this.errored = true;
           })
           .finally(() => (this.loading = false));
@@ -133,6 +142,14 @@ export default {
     //ruta o link de api para ser consumida
     baseUrl() {
       return "https://pokeapi.co/api/v2/pokemon/";
+    },
+    error() {
+      return fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
+        .then((response) => response.json())
+        .then((data) => (this.errorPokemon = data));
+    },
+    errorimagen() {
+      return this.errorPokemon.sprites.front_default;
     },
   }, //final de computed
   components: {
